@@ -6,10 +6,10 @@ import lombok.Data;
 public class Page {
 	
 	/* 기본값 */
-	private static final int PAGE_NUM = 1;
-	private static final int ROWS_PER_PAGE = 10;
-	private static final int PAGE_COUNT = 10;
-	private static final int FIRST_PAGE = 1;
+	public static final int PAGE_NUM = 1;
+	public static final int ROWS_PER_PAGE = 10;
+	public static final int PAGE_COUNT = 10;
+	public static final int FIRST_PAGE = 1;
 	
 	/* 필수 정보 */
 	private int pageNum;			// 현재 페이지 번호
@@ -30,4 +30,36 @@ public class Page {
 	private int startRowIndex;		// 시작 글 index
 	
 	private String keyword;			// 검색어
+	
+	/* 생성자 */
+	public Page() {
+		this.pageNum = PAGE_NUM;
+		this.rowsPerPage = ROWS_PER_PAGE;
+		this.pageCount = PAGE_COUNT;
+	}
+	public Page(int pageNum, int rowsPerPage, int pageCount, int totalCount, String keyword) {
+		this.pageNum = pageNum;
+		this.rowsPerPage = rowsPerPage;
+		this.pageCount = pageCount;
+		this.totalCount = totalCount;
+		this.keyword = keyword;
+		
+		this.prev = pageNum - 1;
+		this.next = pageNum + 1;
+		
+		this.firstPage = FIRST_PAGE;
+		
+		if ( totalCount % rowsPerPage == 0)
+			this.lastPage = totalCount / rowsPerPage;
+		else
+			this.lastPage = (totalCount / rowsPerPage) + 1;
+		
+		this.startPage = ( (pageNum - 1)/ pageCount ) * pageCount + 1;
+		this.endPage = (((pageNum -1) / pageCount) + 1) * pageCount;
+		
+		if (this.endPage > this.lastPage)
+			this.endPage = this.lastPage;
+		
+		this.startRowIndex = ( pageNum - 1 ) * rowsPerPage;
+	}
 }

@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import aloha.domain.Board;
+import aloha.domain.BoardDTO;
 import aloha.domain.BoardFile;
+import aloha.domain.Page;
 import aloha.service.BoardService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,15 +31,19 @@ public class BoardController {
 	//	Spring 4.3 이전
 	//	@RequestMapping(value = "/board/list", method = RequestMethod.GET)
 	@GetMapping("/list")
-	public String list(Model model, String keyword) throws Exception {
+	public String list(Model model, Page page) throws Exception {
 		
-		keyword = ( keyword == null ? "" : keyword);
+		//keyword = ( keyword == null ? "" : keyword);
 		
-		//		게시글 목록 요청
-		List<Board> list = service.list(keyword);
+		// 게시글 목록 요청
+		BoardDTO boardDTO = service.list(page);
 		
-		//		게시글 목록 모델에 추가
+		List<Board> list = boardDTO.getBoardList();
+		page = boardDTO.getPage();
+		
+		// 게시글 목록 모델에 추가
 		model.addAttribute("list", list);
+		model.addAttribute("page", page);
 		
 		return "board/list";
 	}

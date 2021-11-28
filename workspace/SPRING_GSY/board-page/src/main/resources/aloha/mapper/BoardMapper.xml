@@ -86,4 +86,23 @@
 		DELETE FROM board_file WHERE file_no = #{fileNo}
 	</delete>
 	
+	<!-- 게시글 수 조회 -->
+	<select id="totalCount" resultType="int">
+		SELECT COUNT(*)
+		FROM board
+		WHERE board_no > 0
+			AND (
+						title LIKE CONCAT( '%', #{keyword}, '%' )
+					OR writer LIKE CONCAT( '%', #{keyword}, '%' )
+					OR content LIKE CONCAT( '%', #{keyword}, '%' )			
+				)
+	</select>
+	<!-- [페이지] 게시글 목록 -->
+	<select id="listWithPage" resultType="Board">
+		SELECT *
+		FROM board
+		ORDER BY board_no DESC
+				,reg_date DESC
+		LIMIT #{startRowIndex}, #{rowsPerPage}
+	</select>
 </mapper>

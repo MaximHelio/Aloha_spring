@@ -3,7 +3,9 @@ package aloha.service;
 import java.util.List;
 
 import aloha.domain.Board;
+import aloha.domain.BoardDTO;
 import aloha.domain.BoardFile;
+import aloha.domain.Page;
 
 public interface BoardService {
 	// 게시글 목록
@@ -32,4 +34,7 @@ public interface BoardService {
 
 	// 파일 삭제
 	public void deleteFile(Integer fileNo) throws Exception;
+
+	// 페이지 게시글 목록
+	public BoardDTO list(Page page) throws Exception;
 }

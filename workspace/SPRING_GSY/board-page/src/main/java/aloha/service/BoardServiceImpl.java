@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import aloha.domain.Board;
+import aloha.domain.BoardDTO;
 import aloha.domain.BoardFile;
+import aloha.domain.Page;
 import aloha.mapper.BoardMapper;
 import aloha.utils.FileUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +30,9 @@ public class BoardServiceImpl implements BoardService {
 	
 	@Autowired
 	private FileUtils fileUtils;
+	
+	@Autowired
+	private BoardDTO boardDTO;
 	
 	@Override
 	public List<Board> list() throws Exception {
@@ -131,6 +136,43 @@ public class BoardServiceImpl implements BoardService {
 		// DB 파일 정보 삭제
 		mapper.deleteFile(fileNo);
 		
+	}
+
+	@Override
+	public BoardDTO list(Page page) throws Exception {
+		
+		String keyword = page.getKeyword();
+		Integer totalCount = page.getTotalCount();
+		Integer rowsPerPage = page.getRowsPerPage();
+		Integer pageCount = page.getPageCount();
+		Integer pageNum = page.getPageNum();
+		
+		// 검색어
+		keyword = keyword == null ? "" : keyword;
+		
+		// 조회된 게시글 수
+		if (totalCount == 0)
+			totalCount = mapper.totalCount(keyword);
+		
+		// 페이지 당 노출 게시글 수 
+		if (rowsPerPage == 0)
+			rowsPerPage = Page.ROWS_PER_PAGE;
+		
+		//노출 페이지 수
+		if ( pageCount == 0 )
+			pageCount = Page.PAGE_COUNT;
+		
+		// 현재 페이지 번호
+		if (pageNum == 0)
+			pageNum = Page.PAGE_NUM;
+		
+		page = new Page(pageNum, rowsPerPage, pageCount, totalCount, keyword);
+		List<Board> list = mapper.listWithPage(page);
+		
+		boardDTO.setBoardList(list);
+		boardDTO.setPage(page);
+		
+		return boardDTO;
 	}
 
 }

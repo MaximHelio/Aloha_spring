@@ -1,9 +1,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+</head>   
 	<h1>게시글 목록</h1>
 	
 	<form action="/board/list" method="get">
@@ -15,20 +15,19 @@
 	<table border="1">
 		<thead>
 			<tr>
-				<th align="center" width="80">글번호</th>
-				<th align="left" width="320">제목</th>
-				<th align="center" width="100">작성자</th>
-				<th align="center" width="200">등록일자</th>
-				<th align="center" width="200">수정일자</th>
-			</tr>		
+				<th width="80">글번호</th>
+				<th width="320">제목</th>
+				<th width="100">작성자</th>
+				<th width="200">등록일자</th>
+				<th width="200">수정일자</th>
+			</tr>
 		</thead>
 		<tbody>
 			<tr th:each=" board : ${list}">
 				<td align="center" th:text="${board.boardNo}"></td>
 				<td align="left">
-				<!-- thymleaf 표현식에서 혼합해서 쓰려면 양옆에 묶어줘야 -->
 					<a th:href="|/board/read?boardNo=${board.boardNo}|"
-						th:text="${board.title}"></a>
+					   th:text="${board.title}"></a>
 				</td>
 				<td align="center" th:text="${board.writer}"></td>
 				<td align="center" th:text="${ #dates.format(board.regDate, 'yyyy-MM-dd HH:mm:ss') }"></td>
@@ -36,5 +35,38 @@
 			</tr>
 		</tbody>
 	</table>
+	
+	<!-- 페이지 네이션 -->
+	<div th:object="${page}" class="paging">
+		
+		<a th:href="|/board/list?pageNum=*{firstPage}&totalCount=*{totalCount}&rowsPerPage=*{rowsPerPage}&pageCount=*{pageCount}&keyword=*{keyword}|" class="first">[처음]</a>
+		<th:block th:if="${page.prev > 0 }">
+			<a th:href="|/board/list?pageNum=*{prev}&totalCount=*{totalCount}&rowsPerPage=*{rowsPerPage}&pageCount=*{pageCount}&keyword=*{keyword}|" class="prev">[이전]</a>
+		</th:block>
+		
+		<th:block th:each="no : ${#numbers.sequence(page.startPage, page.endPage)}">
+			<th:block th:if="${no == page.pageNum}">
+				<b>
+					<a th:href="|/board/list?pageNum=${no}&totalCount=*{totalCount}&rowsPerPage=*{rowsPerPage}&pageCount=*{pageCount}&keyword=*{keyword}|" title="" th:text="${no}"></a>
+				</b>
+			</th:block>
+			<th:block th:unless="${no == page.pageNum}">
+				<a th:href="|/board/list?pageNum=${no}&totalCount=*{totalCount}&rowsPerPage=*{rowsPerPage}&pageCount=*{pageCount}&keyword=*{keyword}|" title="" th:text="${no}"></a>
+			</th:block>
+		</th:block>
+		
+		<th:block th:if="${page.next <= page.lastPage }">
+			<a th:href="|/board/list?pageNum=*{next}&totalCount=*{totalCount}&rowsPerPage=*{rowsPerPage}&pageCount=*{pageCount}&keyword=*{keyword}|" class="next">[다음]</a>
+		</th:block>
+		<a th:href="|/board/list?pageNum=*{lastPage}&totalCount=*{totalCount}&rowsPerPage=*{rowsPerPage}&pageCount=*{pageCount}&keyword=*{keyword}|" class="last">[끝]</a>
+	
+	</div>
+	
+	
 </body>
 </html>
+
+
+
+
+

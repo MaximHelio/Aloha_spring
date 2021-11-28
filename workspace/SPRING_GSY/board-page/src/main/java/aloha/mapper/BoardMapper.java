@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import aloha.domain.Board;
 import aloha.domain.BoardFile;
+import aloha.domain.Page;
 
 @Mapper
 public interface BoardMapper {
@@ -42,4 +43,10 @@ public interface BoardMapper {
 
 	// 게시글 번호에 따른 첨부파일들 삭제
 	public void deleteFiles(Integer boardNo) throws Exception;
+
+	// 게시글 수 조회
+	public Integer totalCount(String keyword) throws Exception;
+
+	// [페이지] 게시글 목록
+	public List<Board> listWithPage(Page page) throws Exception;
 }

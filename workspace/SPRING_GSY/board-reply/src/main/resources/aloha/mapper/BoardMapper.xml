@@ -111,4 +111,32 @@
 				,reg_date DESC
 		LIMIT #{startRowIndex}, #{rowsPerPage}
 	</select>
+	
+	<!-- 댓글 목록 -->
+	<!-- 받아온 객체를 어떤 유형으로 저장할 것인지 -->
+	<select id="replyList" resultType="Reply">
+		SELECT *
+		FROM reply
+		WHERE board_no = #{boardNo}
+	</select>
+	
+	<!-- 댓글 등록 -->
+	<insert id="replyInsert">
+		INSERT INTO reply ( board_no, writer, content )
+					VALUES ( #{boardNo}, #{writer}, #{content} )
+	</insert>
+	
+	<!-- 댓글 수정 -->
+	<update id="replyUpdate">
+		UPDATE reply
+		SET writer = #{writer}
+			,content = #{content}
+		WHERE reply_no = #{replyNo}
+	</update>
+	
+	<!-- 댓글 삭제 -->
+	<delete id="delete">
+		DELETE FROM reply
+		WHERE reply_no = #{replydNo}
+	</delete>
 </mapper>
